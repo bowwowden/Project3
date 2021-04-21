@@ -2,6 +2,14 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "heap.h"
+
+// free
+void heapFree(HEAP *heap)
+{
+    free(heap->H);
+    free(heap);
+}
+
 HEAP *heapInit(int capacity)
 {
     HEAP *heap;
@@ -13,6 +21,24 @@ HEAP *heapInit(int capacity)
     return heap;
 }
 
+// inserts object type element into the heap
+void HeapInsert(HEAP *H, int value)
+{
+    if (heap->size >= heap->capacity){
+        printf("Problem in Inser: Heap full...\n");
+        return 1;
+    }
+    
+    heap->size++;
+    heap->H[heap->size]=item;
+    V[heap->H[heap->size]->vertex].pos = heap->size;
+    MovingUp(heap, heap->size);
+    return 0;
+}
+
+
+
+
 void printHeap(HEAP *H)
 {   
     printf("capacity=%d, size=%d\n", H->capacity, H->size);
@@ -21,24 +47,48 @@ void printHeap(HEAP *H)
         printf("%d, ", H->elements[j]->key);
     }
     printf("%d\n", H->elements[len+1]->key);
-}
+} 
 
 int sizeOf(HEAP *H)
 {
     return H->size;
 }
 
-// inserts object type element into the heap
-void insert(HEAP *H, int value)
+
+void MovingUp (HEAP *heap, int pos) 
 {
-    ElementT element = (ElementT) malloc(sizeof(ELEMENT));
-    element->key=value;
-    int j = H->size + 1;
-    H->elements[j] = element;
-    H->size++;
-    buildMinHeap(H);
+    pELEMENT temp;
+    int parent;
+
+    parent = pos/2;
+    if (pos > 1 && heap->H[pos]->key < heap->H[parent]->key)
+    {
+        temp = heap->H[pos];
+        heap->H[pos] = heap->H[parent];
+        heap->H[parent] = temp;
+        V[heap->H[pos]->vertex].pos = pos;
+        V[heap->H[parent]->vertex].parent = parent;
+        MovingUp(heap, parent);
+    }
+
 }
 
+pELEMENT DeleteMin (HEAP *heap, int *flag, int *count_Heapify)
+{
+    pELEMENT min, last;
+    
+    if (heap->size <= 0) {
+        printf("Error in DeleteMin: heap empty\n");
+        return NULL;
+    }
+    min = heap->H[1];
+    last = heap->H[heap->size--];
+    heap->H[1] = last;
+    V[heap->H[1]->vertex].pos = 1;
+    MovingDown(heap, 1, flag, count_Heapify);
+    V[min->vertex].pos = 0;
+    return min;
+}
 
 // deletes minimum element from the heap
 int extractMin(HEAP *H)
