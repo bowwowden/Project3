@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     if (0 == strcmp(argv[2], "directed\0")){
         directed_graph = 1;
     }
-     if (0 == strcmp(argv[2], "undirected\0")){
+    if (0 == strcmp(argv[2], "undirected\0")){
         directed_graph = 0;
     }
 
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     // read in n=|V| and m=|E|
     v_fscanf = fscanf(ifile, "%d%d", &n, &m);
     if (v_fscanf < 2) {
-        // printf("ErrorGLX2: fscanf returns %d.\n", v_fscanf);
+        printf("ErrorGLX2: fscanf returns %d.\n", v_fscanf);
         exit(1);
     }
  
@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+
     // read in the edges and construct adjacency lists
     for (i=1; i<=m; i++){
         v_fscanf = fscanf(ifile, "%d%d%d%f", &edge_id, &u, &v, &w);
@@ -63,17 +64,23 @@ int main(int argc, char *argv[])
             exit(1);
         }
 
-          // allocate memory for adjacency lists
-        A = (pNODE *) malloc(sizeof(NODE));
+        printf("Reached this point. Edge id: %d, vertex u: %d, vertex v: %d, weight: %f\n", edge_id, u, v, w);
+
+        // allocate memory for adjacency lists
+        node = (pNODE) malloc(sizeof(NODE));
         if (!node){
             printf("Error: malloc failure.\n");
             exit(1);
          }
-         node->u = u;
-         node->v = v;
-         node->w = w;
-         node->next = A[u];
-         A[u] = node;
+
+        node->u = u;
+        node->v = v;
+        node->w = w;
+        node->next = A[u];
+        A[u] = node;
+
+        printf("Check the adjacency list %d\n", n);
+        printf("Size of adjacency list %d\n", sizeof(A));
 
          if (!directed_graph){
              // BGN for undirected graphs
@@ -88,35 +95,37 @@ int main(int argc, char *argv[])
             node->next = A[v];
             A[v] = node;
          }
-        }
-        /* 
-        // Check the adjacency lists
-        for (i=1; i<=n; i++){
-            printf("Node %d:", i);
-            node = A[i];
-            while (node) {
-                printf("-->|%d %4.1f| ", node->v, node->w);
-                node = node->next;
-            }
-            printf("\n");
-        }
-        */
+        
+    }
 
-        // close input file
-        fclose(ifile);
-    
-        source = 0;
-        destination = 0;
-
-        V = (VERTEX *) calloc(n+1, sizeof(VERTEX));
-        if (!V) {
-            printf("Error: calloc failure.\n");
-            exit(1); 
+    printf("Check the adjacency list %d\n", n);
+    printf("Size of adjacency list %d\n", sizeof(A));
+    // Check the adjacency lists
+    for (i=1; i<=n; i++){
+        printf("Node %d:", i);
+        node = A[i];
+        while (node) {
+            printf("-->|%d %4.1f| ", node->v, node->w);
+            node = node->next;
         }
-    
+        printf("\n");
+    }
+
+    // close input file    
+    printf("File closed\n");
+    fclose(ifile);
+
+    source = 0;
+    destination = 0;
+    V = (VERTEX *) calloc(n+1, sizeof(VERTEX));
+    if (!V) {
+        printf("Error: calloc failure.\n");
+        exit(1); 
+    }
 
     // Query Part
     while (1){
+        printf("In query part");
         r_value = nextWord(word);
         if (!r_value){
             printf("ErrorGLX: EOF r_value=%d\n", r_value);
@@ -147,14 +156,20 @@ int main(int argc, char *argv[])
                 if (source_new < 1 || source_new > n || flag_new < 0 || flag_new > 1){
                     printf("Error: invalid find query\n");
                 } else {
+                    printf("Djikstra's called. Else bracket in find\n");
                     source = source_new;
                     destination = destination_new;
                     flag = flag_new;
+
+                    printf("Break yet?%s\n");
                     // pass A for adjacency list
                     dijkstra(n, A, source, destination, flag);
-                }           
+                }  
+                printf("Break yet?%s\n");
             }    
-        } else if (0 ==   strcmp(word, "write")) {
+        } 
+        
+        if (0 ==   strcmp(word, "write")) {
             r_value = nextWord(word2);
             if (!r_value){
                 continue;
@@ -175,9 +190,11 @@ int main(int argc, char *argv[])
                         printPath(n, source, destination, s, t);
                     }
                 } 
-            } else {
-                continue;
-            }
+            } 
+        } 
+        
+        else {
+            continue;
         }
         exit(0);
     }

@@ -3,11 +3,13 @@
 
 #include <stdio.h>
 
+
 typedef struct TAG_VERTEX{
     int vertex; // vertex ID
     int color;
     int pi;
     float key; // current distance from source vertex
+    float dist; // added to fix error
     int pos;
     char *name;
 }VERTEX;
@@ -31,8 +33,12 @@ typedef struct TAG_PATH{
     int vertex;
     TAG_PATH *next;
 }PATH;
+typedef PATH *pPATH;
+
 
 void printPath(int n, int source, int destination, int s, int t);
-int dijkstra(int n, pNODE *A, int s, int t, int flag);
+void dijkstra(int n, pNODE *A, int s, int t, int flag);
+
+extern VERTEX *V;
 
 #endif

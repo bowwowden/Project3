@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <graph.h>
-#include <heap.h>
+#include "graph.h"
+#include "heap.h"
 
-extern VERTEX *V;
-void printPath(int n, int source, int destination, int s, int s)
+
+void printPath(int n, int source, int destination, int s, int t)
 {
-    PATH *pPATH:
+    PATH *pPATH;
     PATH *pNODE;
     int u, v;
 
@@ -15,26 +15,24 @@ void printPath(int n, int source, int destination, int s, int s)
             printf("No %d-%d path exists.\n", s, t);
             return;
         } else {
-            return;
-        } else {
             printf("No %d-%d path has been computed.\n", s, t);
             return;
-        } else if (V[t].color == 1) {
-            printf("Path not known to be shortest: <%d", s);
-        } else if (V[t].color == 2) {
-            printf("Shortest path: <%d", s);
         }
+    } else if (V[t].color == 1) {
+        printf("Path not known to be shortest: <%d", s);
+    } else if (V[t].color == 2) {
+        printf("Shortest path: <%d", s);
+    }
 
-        // push onto stack
-        pNode = (PATH *) malloc(sizeof(PATH));
-        pNode->vertex = t;
-        pNode->next = NULL;
-        pPATH = pNode;
-        v = pNode->vertex;
-        while (V[v].pi){
-            u = V[v].pi;
-            pNode = (PATH *) malloc(sizeof(PATH));
-        }
+    // push onto stack
+    pNODE = (PATH *) malloc(sizeof(PATH));
+    pNODE->vertex = t;
+    pNODE->next = NULL;
+    pPATH = pNODE;
+    v = pNODE->vertex;
+    while (V[v].pi){
+        u = V[v].pi;
+        pNODE = (PATH *) malloc(sizeof(PATH));
     }
 }
 
@@ -55,8 +53,9 @@ void printPath(int n, int source, int destination, int s, int s)
 //     return 0;
 // }
 
-int dijkstra(int n, pNODE *A, int s, int t, int flag)
+void dijkstra(int n, pNODE *A, int s, int t, int flag)
 {
+    printf("Did it seg fault yet");
     pNODE node;
     HEAP *heap;
     ELEMENT *element;
@@ -74,11 +73,23 @@ int dijkstra(int n, pNODE *A, int s, int t, int flag)
     V[s].dist = 0;
     V[s].color = 1;
 
+    // // instead of initializing a single source, initialize a minheap
     heap = heapInit(n);
+    buildMinHeap(heap);
+    
+
+
     element = (ELEMENT *) malloc(sizeof(ELEMENT));
     element->vertex = s;
     element->key = 0;
-    Insert(heap, element);
+    bool Error = false;
+    if (Insert(heap, element) == 0)
+    {
+        Error = false;
+    }
+    else {
+        Error = true;
+    }
     if (flag == 1){
         // print insertion information
         printf("Insert vertex %d, key=%12.4f\n", element->vertex, element->key);
@@ -102,7 +113,12 @@ int dijkstra(int n, pNODE *A, int s, int t, int flag)
             if (V[v].color == 0) {
                 V[v].dist = V[u].dist + w;
             }
+            node = node->next;
         }
-    }
-     
+        printf("loop 2 exited");
+    }    
+}
+
+void relax(){
+
 }

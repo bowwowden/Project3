@@ -1,6 +1,6 @@
 EXEC = run
-CC = g++
-CFLAGS = -c -Wall
+CC = g++ -O4
+CFLAGS =  -c -Wall
 
 $(EXEC): main.o util.o heap.o graph.o
 		$(CC) -o $(EXEC) main.o util.o heap.o graph.o

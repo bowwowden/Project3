@@ -9,16 +9,19 @@ typedef VERTEX *pELEMENT;
 typedef struct TAG_HEAP{
     int capacity;
     int size;
+    int heaps_called = 0;
     pELEMENT *H;
 }HEAP;
 
 void heapFree(HEAP *heap);
-
+ 
 HEAP *heapInit(int capacity);
 void heapPrint(HEAP *heap); 
 
 void MovingUp(HEAP *heap, int pos);
  
+int Insert(HEAP *heap, pELEMENT item);
+
 // typedef struct TAG_ELEMENT{
 //     int key;
 // }ELEMENT;
@@ -37,16 +40,16 @@ void MovingUp(HEAP *heap, int pos);
 HEAP *heapInit(int capacity);
 void printHeap(HEAP *H);
 int sizeOf(HEAP *H);
-void insert(HEAP *H, int value);
-int extractMin(HEAP *H);
-void decreaseKey(HEAP *H, int index, int value);
+void HeapInsert(HEAP *H, int value);
+
+pELEMENT DeleteMin (HEAP *heap, int *flag, int *count_Heapify);
+int DecreaseKey(HEAP *heap, int pos, int newKey);
+
 void buildMinHeap(HEAP *H);
 void minHeapify(HEAP *H, int index);
 int left(int i);
 int right(int i);
 int parent(int i);
 void swap(ELEMENT *x, ELEMENT *y);
-// // void PercUp(HEAP *H, int pos);
-// // void PercDown(HEAP *H, int pos);
 
 #endif
